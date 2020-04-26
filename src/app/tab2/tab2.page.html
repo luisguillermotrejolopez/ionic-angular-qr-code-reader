@@ -1,17 +1,24 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
+  <ion-toolbar color="primary">
     <ion-title>
-      Tab 2
+      QR Code
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 2</ion-title>
-    </ion-toolbar>
-  </ion-header>
-
-  <app-explore-container name="Tab 2 page"></app-explore-container>
+  <div class="ion-text-justify margin-card">
+    The next image is the QR Code generated in the site
+    <a href="#" onclick="window.open('https://www.qr-code-generator.com/', '_system', 'location=yes'); return false;">
+      QR Code Generator
+    </a>
+    with the information from previous tab. The QR Code is located in the path "src/assets".
+  </div>
+  <div>
+    <ion-card>
+      <ion-card-content class="ion-text-center margin-card">
+        <ion-img src="/assets/qrCode.jpg"></ion-img>
+      </ion-card-content>
+    </ion-card>
+  </div>
 </ion-content>
