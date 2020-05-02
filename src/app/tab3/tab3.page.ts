@@ -1,6 +1,11 @@
 import { Component } from '@angular/core';
-import { QRScanner, QRScannerStatus } from '@ionic-native/qr-scanner/ngx';
+import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
+import { AlertController } from '@ionic/angular';
 
+/**
+ * Component to read QR Code generated.
+ * @author Guillermo Trejo <luisguillermotrejolopez@gmail.com>
+ */
 @Component({
   selector: 'app-tab3',
   templateUrl: 'tab3.page.html',
@@ -12,49 +17,51 @@ export class Tab3Page {
   private keyValue: string = '#MySeparator#';
 
   constructor(
-    private qrScanner: QRScanner
+    private barcodeScanner: BarcodeScanner,
+    public alertController: AlertController
   ) {}
 
-  public readQrCode() {
-    // Optionally request the permission early
-    this.qrScanner.prepare()
-      .then((status: QRScannerStatus) => {
-        if (status.authorized) {// camera permission was granted
-          this.qrScanner.show();
-          this.showCamera();
-
-          // start scanning
-          let scanSub = this.qrScanner.scan().subscribe((data: string) => {
-            this.hideCamera();
-            this.qrScanner.hide(); // hide camera preview
-            scanSub.unsubscribe(); // stop scanning
-
-            this.formatData(data);
-          });
-        } else if (status.denied) {
-          // camera permission was permanently denied
-          // you must use QRScanner.openSettings() method to guide the user to the settings page
-          // then they can grant the permission from there
-          console.log('Camera permission denied');
-        } else {
-          // permission was denied, but not permanently. You can ask for permission again at a later time.
-          console.log('Permission denied for this runtime.');
-        }
-      })
-      .catch((e: any) => console.log('Error is', e));
+  /**
+   * Method to read QR Code.
+   * @author Guillermo Trejo <luisguillermotrejolopez@gmail.com>
+   *
+   * @returns void
+  */
+  public readQrCode(): void {
+    this.barcodeScanner.scan().then(codeData => {
+      this.formatData(codeData.text);
+    }).catch(error => {
+      this.showError(error);
+    });
   }
 
-  private showCamera(): void {
-    document.getElementsByTagName("body")[0].style.opacity = "0";
-  }
-
-  private hideCamera(): void {
-    document.getElementsByTagName("body")[0].style.opacity = "1";
-  }
-
-  private formatData(data: any): void {
-    data = data.split(this.keyValue);
+  /**
+   * Method to format data obtained from QR Code.
+   * @author Guillermo Trejo <luisguillermotrejolopez@gmail.com>
+   *
+   * @param {string} qrCodeData - data obtained from qr code
+   * @returns void
+  */
+  private formatData(qrCodeData: string): void {
+    let data: Array<string> = qrCodeData.split(this.keyValue);
     this.language = { markupLanguage: data[0], styleSheets: data[1], scriptLanguage: data[2], strongTyping: data[3] };
+  }
+
+  /**
+   * Method to show an error ocurred scanning.
+   * @author Guillermo Trejo <luisguillermotrejolopez@gmail.com>
+   *
+   * @param {any} message - error message occurred
+   * @returns void
+  */
+  async showError(message: any): Promise<void> {
+    const alert = await this.alertController.create({
+      header: 'Error',
+      message: 'Has ocurred an error scanning: ' + message,
+      buttons: ['OK']
+    });
+
+    await alert.present();
   }
 
 }
