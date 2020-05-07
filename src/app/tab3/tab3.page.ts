@@ -36,6 +36,16 @@ export class Tab3Page {
   }
 
   /**
+   * Method to clear data.
+   * @author Guillermo Trejo <luisguillermotrejolopez@gmail.com>
+   *
+   * @returns void
+  */
+  public clearData(): void {
+    this.language = { markupLanguage: '', styleSheets: '', scriptLanguage: '', strongTyping: '' };
+  }
+
+  /**
    * Method to format data obtained from QR Code.
    * @author Guillermo Trejo <luisguillermotrejolopez@gmail.com>
    *
